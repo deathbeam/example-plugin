@@ -14,6 +14,7 @@ import net.runelite.api.events.BeforeRender;
 import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
@@ -29,6 +30,9 @@ public class FixedHideChatPlugin extends Plugin implements KeyListener
 {
 	@Inject
 	private Client client;
+
+	@Inject
+	private ClientThread clientThread;
 
 	@Inject
 	private KeyManager keyManager;
@@ -54,7 +58,7 @@ public class FixedHideChatPlugin extends Plugin implements KeyListener
 		lastMenu = 0;
 
 		// Reset widgets
-		resetWidgets();
+		clientThread.invoke(this::resetWidgets);
 	}
 
 	@Override
