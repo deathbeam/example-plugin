@@ -15,8 +15,8 @@ public class FixedHideChatConstants
 	);
 
 	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_DIALOG_NPC = new AbstractMap.SimpleEntry<>(
-		WidgetInfo.DIALOG_NPC.getGroupId(),
-		WidgetInfo.DIALOG_NPC.getChildId()
+		WidgetID.DIALOG_NPC_GROUP_ID,
+		0
 	);
 
 	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_DIALOG_PLAYER = new AbstractMap.SimpleEntry<>(
