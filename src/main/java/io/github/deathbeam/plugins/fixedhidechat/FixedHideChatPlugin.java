@@ -8,6 +8,8 @@ import static io.github.deathbeam.plugins.fixedhidechat.FixedHideChatConstants.T
 import java.awt.event.KeyEvent;
 import java.util.Map;
 import javax.inject.Inject;
+
+import com.google.inject.Provides;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.events.BeforeRender;
@@ -16,6 +18,7 @@ import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
@@ -37,6 +40,15 @@ public class FixedHideChatPlugin extends Plugin implements KeyListener
 
 	@Inject
 	private KeyManager keyManager;
+
+	@Inject
+	private FixedHideChatConfig config;
+
+	@Provides
+	FixedHideChatConfig getConfig(ConfigManager configManager)
+	{
+		return configManager.getConfig(FixedHideChatConfig.class);
+	}
 
 	private int lastMenu = 0;
 	private boolean hideChat = true;
@@ -109,10 +121,17 @@ public class FixedHideChatPlugin extends Plugin implements KeyListener
 			return;
 		}
 
-		// Expand the view height
-		setViewSizeTo(DEFAULT_VIEW_HEIGHT, EXPANDED_VIEW_HEIGHT);
-
 		final Widget chatboxMessages = client.getWidget(WidgetInfo.CHATBOX);
+
+		//Allow viewport to go to original size if chat is visible and option is enabled
+		if (chatboxMessages != null && !chatboxMessages.isHidden() && config.resizeViewport())
+		{
+			setViewSizeTo(EXPANDED_VIEW_HEIGHT, DEFAULT_VIEW_HEIGHT);
+		} else
+		{
+			// Expand the view height
+			setViewSizeTo(DEFAULT_VIEW_HEIGHT, EXPANDED_VIEW_HEIGHT);
+		}
 
 		if (chatboxMessages != null)
 		{
