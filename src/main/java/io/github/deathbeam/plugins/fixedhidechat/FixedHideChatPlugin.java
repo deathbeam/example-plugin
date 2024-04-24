@@ -284,7 +284,6 @@ public class FixedHideChatPlugin extends Plugin implements KeyListener
 	{
 		if (client.isResized())
 		{
-			resetFixedHideChatBorders();
 			return;
 		}
 
@@ -307,6 +306,7 @@ public class FixedHideChatPlugin extends Plugin implements KeyListener
 		Widget chatboxMessages = client.getWidget(ComponentID.CHATBOX_FRAME);
 		if (client.isResized() || chatboxMessages == null || !chatboxMessages.isHidden())
 		{
+			resetFixedHideChatBorders();
 			return;
 		}
 		Widget chatbox = client.getWidget(ComponentID.CHATBOX_PARENT);
