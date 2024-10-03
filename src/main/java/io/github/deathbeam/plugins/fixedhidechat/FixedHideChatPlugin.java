@@ -80,23 +80,23 @@ public class FixedHideChatPlugin extends Plugin implements KeyListener
 	@Override
 	public void keyTyped(KeyEvent e)
 	{
-		keyReleased(e);
+
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
-		keyReleased(e);
+
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
-		if (!client.isResized() && e.getKeyCode() == config.hideChatHotkey().getKeyCode() && e.getModifiersEx() == config.hideChatHotkey().getModifiers() && !hideChat)
+		if (!client.isResized() && e.getKeyCode() == config.hideChatToggleHotkey().getKeyCode() && e.getModifiersEx() == config.hideChatToggleHotkey().getModifiers())
 		{
-			hideChat = true;
+			hideChat = !hideChat;
 			e.consume();
-		}
+		} 
 	}
 
 	@Subscribe
