@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.events.BeforeRender;
 import net.runelite.api.events.MenuOptionClicked;
+import net.runelite.api.events.ChatMessage;
 import net.runelite.api.widgets.*;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.callback.ClientThread;
@@ -193,6 +194,22 @@ public class FixedHideChatPlugin extends Plugin implements KeyListener
 		}
 	}
 
+	@Subscribe
+	public void onChatMessage(final ChatMessage event)
+	{
+		if (hideChat = false)
+		{
+			return;
+		}
+
+		final int messageType = event.ChatMessageType;
+		
+		if (messageType == 114 || messageType == 115) // Type 114 is NPC/player dialog, 115 is graphic/object dialog
+		{
+			hideChat = false;
+		}
+	}
+	
 	private static void changeWidgetXY(Widget widget, int xPosition)
 	{
 		widget.setOriginalX(xPosition);
