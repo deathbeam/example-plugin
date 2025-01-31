@@ -197,12 +197,12 @@ public class FixedHideChatPlugin extends Plugin implements KeyListener
 	@Subscribe
 	public void onChatMessage(final ChatMessage chatMessage)
 	{
-		if (hideChat == false)
+		if (!hideChat)
 		{
 			return;
 		}
 		
-		if (hideChat == true && (chatMessage.getType() == ChatMessageType.DIALOG || chatMessage.getType() == ChatMessageType.MESBOX))
+		if (hideChat && (chatMessage.getType() == ChatMessageType.DIALOG || chatMessage.getType() == ChatMessageType.MESBOX))
 		{
 			hideChat = false;
 		}
