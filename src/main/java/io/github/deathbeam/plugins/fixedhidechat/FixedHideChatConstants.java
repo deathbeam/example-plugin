@@ -16,7 +16,7 @@ public class FixedHideChatConstants
 
 	// Wrong PIN popup, idk what else; S162.565 (ID: 10617397)
 	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_SPECIAL = new AbstractMap.SimpleEntry<>(
-		219,
+		InterfaceID.DIALOG_OPTION,
 		1
 	);
 
@@ -31,7 +31,7 @@ public class FixedHideChatConstants
 	);
 
 	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_DIALOG_SPRITE = new AbstractMap.SimpleEntry<>(
-		231,
+		InterfaceID.DIALOG_NPC,
 		2
 	);
 
