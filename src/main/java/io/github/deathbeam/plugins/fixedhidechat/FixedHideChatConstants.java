@@ -55,6 +55,12 @@ public class FixedHideChatConstants
 		9
 	);
 
+	// Cannot find a suitable constant for 270, this is for "Making" interfaces (glassblowing, potion making, smelting)
+	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_MAKE_X = new AbstractMap.SimpleEntry<>(
+		270,
+		1
+	);
+
 	static final int DEFAULT_VIEW_HEIGHT = 334;
 	static final int EXPANDED_VIEW_HEIGHT = 476;
 	static final int BANK_X = 12;
@@ -71,6 +77,7 @@ public class FixedHideChatConstants
 		.add(CHATBOX_MESSAGES_DIALOG_NPC)
 		.add(CHATBOX_MESSAGES_DIALOG_PLAYER)
 		.add(CHATBOX_MESSAGES_DIALOG_SPRITE)
+		.add(CHATBOX_MESSAGES_MAKE_X)
 		.build();
 
 	static final Set<Map.Entry<Integer, Integer>> TO_CONTRACT_WIDGETS = ImmutableSet
