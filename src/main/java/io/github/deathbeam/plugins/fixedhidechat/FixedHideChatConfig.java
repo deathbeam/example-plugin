@@ -24,7 +24,20 @@ public interface FixedHideChatConfig extends Config
 					+ "Can be a combination of keys (e.g. ctrl+L). Set the key to 'Not set' to disable this setting.",
 			position = 1
 	)
+
 	default Keybind hideChatHotkey() {
 		return new Keybind(KeyEvent.VK_ESCAPE, 0);
+	}
+
+	@ConfigItem(
+		keyName = "darkMode",
+		name = "Dark Mode",
+		description = "Enable Dark Mode (black chat vertical borders).",
+		position = 2
+	)
+
+	default boolean darkMode()
+	{
+		return false;
 	}
 }
