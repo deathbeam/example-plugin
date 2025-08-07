@@ -349,7 +349,11 @@ public class FixedHideChatPlugin extends Plugin implements KeyListener
 			}
 
 			Widget leftBorder = chatbox.createChild(-1, WidgetType.GRAPHIC);
-			leftBorder.setSpriteId(FixedHideChatSprites.FIXED_HIDE_CHAT_LEFT_BORDER.getSpriteId());
+
+			// switch left to dark
+			if(config.darkMode()) leftBorder.setSpriteId(FixedHideChatSprites.FIXED_HIDE_CHAT_LEFT_BORDER_DARK.getSpriteId());
+			else leftBorder.setSpriteId(FixedHideChatSprites.FIXED_HIDE_CHAT_LEFT_BORDER.getSpriteId());
+
 			leftBorder.setOriginalWidth(4);
 			leftBorder.setOriginalHeight(142);
 			leftBorder.setOriginalX(0);
@@ -358,7 +362,11 @@ public class FixedHideChatPlugin extends Plugin implements KeyListener
 			leftBorder.revalidate();
 
 			Widget rightBorder = chatbox.createChild(-1, WidgetType.GRAPHIC);
-			rightBorder.setSpriteId(FixedHideChatSprites.FIXED_HIDE_CHAT_RIGHT_BORDER.getSpriteId());
+
+			// switch left to dark
+			if(config.darkMode()) rightBorder.setSpriteId(FixedHideChatSprites.FIXED_HIDE_CHAT_RIGHT_BORDER_DARK.getSpriteId());
+			else rightBorder.setSpriteId(FixedHideChatSprites.FIXED_HIDE_CHAT_RIGHT_BORDER.getSpriteId());
+
 			rightBorder.setOriginalWidth(3);
 			rightBorder.setOriginalHeight(142);
 			rightBorder.setOriginalX(516);

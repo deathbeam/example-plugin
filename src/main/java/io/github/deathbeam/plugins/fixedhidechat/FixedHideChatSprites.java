@@ -34,7 +34,8 @@ public enum FixedHideChatSprites implements SpriteOverride
 {
 	FIXED_HIDE_CHAT_LEFT_BORDER(-206, "/-206.png"),
 	FIXED_HIDE_CHAT_RIGHT_BORDER(-207, "/-207.png"),
-
+	FIXED_HIDE_CHAT_LEFT_BORDER_DARK(-208, "/-208.png"),
+	FIXED_HIDE_CHAT_RIGHT_BORDER_DARK(-209, "/-209.png"),
 	;
 
 	@Getter
