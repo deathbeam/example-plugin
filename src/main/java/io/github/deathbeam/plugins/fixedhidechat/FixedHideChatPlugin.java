@@ -287,8 +287,7 @@ public class FixedHideChatPlugin extends Plugin implements KeyListener
 
 	private void setViewSizeTo(final int originalHeight, final int newHeight)
 	{
-		// yes, this is what they've named the viewport
-		final Widget viewport = client.getWidget(net.runelite.api.gameval.InterfaceID.Toplevel.CHAT_CONTAINER);
+		final Widget viewport = client.getWidget(net.runelite.api.gameval.InterfaceID.Toplevel.MAIN);
 
 		if (viewport != null)
 		{
