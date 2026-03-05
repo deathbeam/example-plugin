@@ -33,6 +33,11 @@ public class FixedHideChatConstants
 		43
 	);
 
+	private static final Map.Entry<Integer, Integer>  CHATBOX_MES_LAYER_SCROLLAREA = new AbstractMap.SimpleEntry<>(
+		net.runelite.api.gameval.InterfaceID.CHATBOX,
+		48
+	);
+
 	private static final Map.Entry<Integer, Integer>  FIXED_VIEWPORT_BANK_POPUP_CONTAINER = new AbstractMap.SimpleEntry<>(
 		ComponentID.BANK_CONTAINER,
 		0
@@ -41,6 +46,11 @@ public class FixedHideChatConstants
 	private static final Map.Entry<Integer, Integer>  FIXED_VIEWPORT_SEED_VAULT_INVENTORY_ITEM_CONTAINER = new AbstractMap.SimpleEntry<>(
 		InterfaceID.SEED_VAULT,
 		1
+	);
+
+	private static final Map.Entry<Integer, Integer> CHAT_LEFT = new AbstractMap.SimpleEntry<>(
+		net.runelite.api.gameval.InterfaceID.CHAT_LEFT,
+		0
 	);
 
 	static final Map.Entry<Integer, Integer>  FIXED_MAIN = new AbstractMap.SimpleEntry<>(
@@ -62,6 +72,8 @@ public class FixedHideChatConstants
 		.add(CHATBOX_MESSAGES_CONTAINER)
 		.add(CHATBOX_MESSAGES_SPECIAL)
 		.add(CHATBOX_GE_SEARCH)
+		.add(CHAT_LEFT)
+		.add(CHATBOX_MES_LAYER_SCROLLAREA)
 		.build();
 
 	static final Set<Map.Entry<Integer, Integer>> TO_CONTRACT_WIDGETS = ImmutableSet
