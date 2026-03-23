@@ -15,6 +15,24 @@ public class FixedHideChatConstants
 		0
 	);
 
+	// Player dialog (S217.0) - when your player character speaks in a dialog
+	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_DIALOG_PLAYER = new AbstractMap.SimpleEntry<>(
+		InterfaceID.DIALOG_PLAYER,
+		0
+	);
+
+	// Sprite dialog (S193.0) - "Are you sure you want to drop..." valuable item warnings, etc.
+	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_DIALOG_SPRITE = new AbstractMap.SimpleEntry<>(
+		InterfaceID.DIALOG_SPRITE,
+		0
+	);
+
+	// Skill multi-choice dialog (S270.0) - "How many would you like to..." (cutting gems, burning logs, etc.)
+	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_SKILLMULTI = new AbstractMap.SimpleEntry<>(
+		net.runelite.api.gameval.InterfaceID.SKILLMULTI,
+		0
+	);
+
 	// A lot of other stuff, we recurse through this, it should catch any messages under (S162.566 ID: 10617398)
 	// Wrong PIN popup, Gauntlet Exit Prompt (S229.0 ID: 15007745), NPC Dialog (N231.0 ID: 5138816), Make-X (N270.0 ID: 17694720)... etc.
 	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_SPECIAL = new AbstractMap.SimpleEntry<>(
@@ -22,7 +40,7 @@ public class FixedHideChatConstants
 		566
 	);
 
-//	// Bank Search Container
+	//	// Bank Search Container
 	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_CONTAINER = new AbstractMap.SimpleEntry<>(
 		InterfaceID.CHATBOX,
 		42
@@ -69,6 +87,9 @@ public class FixedHideChatConstants
 	static final Set<Map.Entry<Integer, Integer>> AUTO_EXPAND_WIDGETS = ImmutableSet
 		.<Map.Entry<Integer, Integer>>builder()
 		.add(CHATBOX_MESSAGES_DIALOG_OPTION)
+		.add(CHATBOX_MESSAGES_DIALOG_PLAYER)
+		.add(CHATBOX_MESSAGES_DIALOG_SPRITE)
+		.add(CHATBOX_MESSAGES_SKILLMULTI)
 		.add(CHATBOX_MESSAGES_CONTAINER)
 		.add(CHATBOX_MESSAGES_SPECIAL)
 		.add(CHATBOX_GE_SEARCH)
