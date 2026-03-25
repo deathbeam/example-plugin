@@ -129,8 +129,9 @@ public class FixedHideChatPlugin extends Plugin implements KeyListener
 			// Causes a very slight flicker of the tag tab above the swap button sadly when opening the bag without the chat hidden
 			if (hideChatPrevious != hideChat)
 			{
-				client.createScriptEvent(bankWidget.getOnLoadListener())
+				client.createScriptEventBuilder(bankWidget.getOnLoadListener())
 					.setSource(bankWidget)
+					.build()
 					.run();
 			}
 			changeWidgetXY(bankWidget, BANK_X);
