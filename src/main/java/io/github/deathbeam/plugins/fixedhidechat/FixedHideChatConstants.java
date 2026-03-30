@@ -33,8 +33,21 @@ public class FixedHideChatConstants
 		0
 	);
 
+	// Message box dialog (S229.0) - Missing chatbox popup of some NPC's when there's only a "Click here to continue" option.
+	// This should also fix the missing chatbox popup when buying battlestaves in Varrock (not sure since I tested in F2P).
+	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_DIALOG_MESSAGEBOX = new AbstractMap.SimpleEntry<>(
+		net.runelite.api.gameval.InterfaceID.MESSAGEBOX,
+		0
+	);
+
+	// Membership benefits prompt (S284.0) - "Become a Member" chatbox popup.
+	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_MEMBERSHIP_PROMPT = new AbstractMap.SimpleEntry<>(
+		net.runelite.api.gameval.InterfaceID.MEMBERSHIP_BENEFITS_PROMPT,
+		0
+	);
+
 	// A lot of other stuff, we recurse through this, it should catch any messages under (S162.566 ID: 10617398)
-	// Wrong PIN popup, Gauntlet Exit Prompt (S229.0 ID: 15007745), NPC Dialog (N231.0 ID: 5138816), Make-X (N270.0 ID: 17694720)... etc.
+	// Wrong PIN popup, NPC Dialog (N231.0 ID: 5138816), Make-X (N270.0 ID: 17694720)... etc.
 	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_SPECIAL = new AbstractMap.SimpleEntry<>(
 		InterfaceID.CHATBOX,
 		566
@@ -89,6 +102,8 @@ public class FixedHideChatConstants
 		.add(CHATBOX_MESSAGES_DIALOG_OPTION)
 		.add(CHATBOX_MESSAGES_DIALOG_PLAYER)
 		.add(CHATBOX_MESSAGES_DIALOG_SPRITE)
+		.add(CHATBOX_MESSAGES_DIALOG_MESSAGEBOX)
+		.add(CHATBOX_MESSAGES_MEMBERSHIP_PROMPT)
 		.add(CHATBOX_MESSAGES_SKILLMULTI)
 		.add(CHATBOX_MESSAGES_CONTAINER)
 		.add(CHATBOX_MESSAGES_SPECIAL)
