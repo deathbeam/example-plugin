@@ -33,14 +33,14 @@ public class FixedHideChatConstants
 		0
 	);
 
-	// Message box dialog (S229.0) - Missing chatbox popup of some NPC's when there's only a 'Click here to continue' option.
+	// Message box dialog (S229.0) - Missing chatbox popup of some NPC's when there's only a "Click here to continue" option.
 	// This should also fix the missing chatbox popup when buying battlestaves in Varrock (not sure since I tested in F2P).
 	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_DIALOG_MESSAGEBOX = new AbstractMap.SimpleEntry<>(
 		net.runelite.api.gameval.InterfaceID.MESSAGEBOX,
 		0
 	);
 
-	// Membership benefits prompt (S284.0) - "Become a Member" popup in F2P
+	// Membership benefits prompt (S284.0) - "Become a Member" chatbox popup.
 	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_MEMBERSHIP_PROMPT = new AbstractMap.SimpleEntry<>(
 		net.runelite.api.gameval.InterfaceID.MEMBERSHIP_BENEFITS_PROMPT,
 		0
