@@ -40,6 +40,12 @@ public class FixedHideChatConstants
 		0
 	);
 
+	// Membership benefits prompt (S284.0) - "Become a Member" popup in F2P
+	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_MEMBERSHIP_PROMPT = new AbstractMap.SimpleEntry<>(
+		net.runelite.api.gameval.InterfaceID.MEMBERSHIP_BENEFITS_PROMPT,
+		0
+	);
+
 	// A lot of other stuff, we recurse through this, it should catch any messages under (S162.566 ID: 10617398)
 	// Wrong PIN popup, NPC Dialog (N231.0 ID: 5138816), Make-X (N270.0 ID: 17694720)... etc.
 	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_SPECIAL = new AbstractMap.SimpleEntry<>(
@@ -97,6 +103,7 @@ public class FixedHideChatConstants
 		.add(CHATBOX_MESSAGES_DIALOG_PLAYER)
 		.add(CHATBOX_MESSAGES_DIALOG_SPRITE)
 		.add(CHATBOX_MESSAGES_DIALOG_MESSAGEBOX)
+		.add(CHATBOX_MESSAGES_MEMBERSHIP_PROMPT)
 		.add(CHATBOX_MESSAGES_SKILLMULTI)
 		.add(CHATBOX_MESSAGES_CONTAINER)
 		.add(CHATBOX_MESSAGES_SPECIAL)
