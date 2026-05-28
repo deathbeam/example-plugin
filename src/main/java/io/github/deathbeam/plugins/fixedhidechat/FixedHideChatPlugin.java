@@ -2,14 +2,17 @@ package io.github.deathbeam.plugins.fixedhidechat;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.util.*;
 import javax.inject.Inject;
 
 import com.google.inject.*;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
+import net.runelite.api.SpritePixels;
 import net.runelite.api.events.BeforeRender;
 import net.runelite.api.events.MenuOptionClicked;
+import net.runelite.api.gameval.SpriteID;
 import net.runelite.api.widgets.*;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.callback.ClientThread;
@@ -19,6 +22,7 @@ import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.util.ImageUtil;
 
 import static io.github.deathbeam.plugins.fixedhidechat.FixedHideChatConstants.*;
 
@@ -29,6 +33,13 @@ import static io.github.deathbeam.plugins.fixedhidechat.FixedHideChatConstants.*
 )
 public class FixedHideChatPlugin extends Plugin implements KeyListener
 {
+	private static final int FIXED_HIDE_CHAT_LEFT_BORDER_SPRITE_ID = -206;
+	private static final int FIXED_HIDE_CHAT_RIGHT_BORDER_SPRITE_ID = -207;
+	private static final int FIXED_HIDE_CHAT_PARENT_WIDTH = 519;
+	private static final int FIXED_HIDE_CHAT_LEFT_BORDER_WIDTH = 4;
+	private static final int FIXED_HIDE_CHAT_RIGHT_BORDER_WIDTH = 3;
+	private static final int FIXED_HIDE_CHAT_BORDER_HEIGHT = 142;
+
 	@Inject
 	private Client client;
 
@@ -47,11 +58,13 @@ public class FixedHideChatPlugin extends Plugin implements KeyListener
 	private int lastMenu = 0;
 	private boolean hideChat = true;
 	private boolean hideChatPrevious = hideChat;
+	private boolean fixedHideChatBorderSpritesLoaded;
+	private SpritePixels lastWindowFrameLeftSprite;
+	private SpritePixels lastSidePanelLeftUpperSprite;
 
 	@Override
 	protected void startUp() throws Exception
 	{
-		spriteManager.addSpriteOverrides(FixedHideChatSprites.values());
 		// Register listener
 		keyManager.registerKeyListener(this);
 	}
@@ -59,7 +72,6 @@ public class FixedHideChatPlugin extends Plugin implements KeyListener
 	@Override
 	protected void shutDown() throws Exception
 	{
-		spriteManager.removeSpriteOverrides(FixedHideChatSprites.values());
 		// Unregister listener
 		keyManager.unregisterKeyListener(this);
 
@@ -67,8 +79,12 @@ public class FixedHideChatPlugin extends Plugin implements KeyListener
 		hideChat = true;
 		lastMenu = 0;
 
-		// Reset widgets
-		clientThread.invoke(this::resetWidgets);
+		// Reset widgets and sprite overrides
+		clientThread.invoke(() ->
+		{
+			resetWidgets();
+			resetFixedHideChatBorderSprites();
+		});
 	}
 
 	@Override
@@ -129,8 +145,9 @@ public class FixedHideChatPlugin extends Plugin implements KeyListener
 			// Causes a very slight flicker of the tag tab above the swap button sadly when opening the bag without the chat hidden
 			if (hideChatPrevious != hideChat)
 			{
-				client.createScriptEvent(bankWidget.getOnLoadListener())
+				client.createScriptEventBuilder(bankWidget.getOnLoadListener())
 					.setSource(bankWidget)
+					.build()
 					.run();
 			}
 			changeWidgetXY(bankWidget, BANK_X);
@@ -343,25 +360,31 @@ public class FixedHideChatPlugin extends Plugin implements KeyListener
 		Widget chatbox = client.getWidget(ComponentID.CHATBOX_PARENT);
 		if (chatbox != null)
 		{
+			// Generate border sprites if needed
+			if (!updateFixedHideChatBorderSprites())
+			{
+				return;
+			}
+
 			if (chatbox.getChild(1) != null)
 			{
 				return;
 			}
 
 			Widget leftBorder = chatbox.createChild(-1, WidgetType.GRAPHIC);
-			leftBorder.setSpriteId(FixedHideChatSprites.FIXED_HIDE_CHAT_LEFT_BORDER.getSpriteId());
-			leftBorder.setOriginalWidth(4);
-			leftBorder.setOriginalHeight(142);
+			leftBorder.setSpriteId(FIXED_HIDE_CHAT_LEFT_BORDER_SPRITE_ID);
+			leftBorder.setOriginalWidth(FIXED_HIDE_CHAT_LEFT_BORDER_WIDTH);
+			leftBorder.setOriginalHeight(FIXED_HIDE_CHAT_BORDER_HEIGHT);
 			leftBorder.setOriginalX(0);
 			leftBorder.setOriginalY(0);
 			leftBorder.setHidden(false);
 			leftBorder.revalidate();
 
 			Widget rightBorder = chatbox.createChild(-1, WidgetType.GRAPHIC);
-			rightBorder.setSpriteId(FixedHideChatSprites.FIXED_HIDE_CHAT_RIGHT_BORDER.getSpriteId());
-			rightBorder.setOriginalWidth(3);
-			rightBorder.setOriginalHeight(142);
-			rightBorder.setOriginalX(516);
+			rightBorder.setSpriteId(FIXED_HIDE_CHAT_RIGHT_BORDER_SPRITE_ID);
+			rightBorder.setOriginalWidth(FIXED_HIDE_CHAT_RIGHT_BORDER_WIDTH);
+			rightBorder.setOriginalHeight(FIXED_HIDE_CHAT_BORDER_HEIGHT);
+			rightBorder.setOriginalX(FIXED_HIDE_CHAT_PARENT_WIDTH - FIXED_HIDE_CHAT_RIGHT_BORDER_WIDTH);
 			rightBorder.setOriginalY(0);
 			rightBorder.setHidden(false);
 			rightBorder.revalidate();
@@ -379,6 +402,109 @@ public class FixedHideChatPlugin extends Plugin implements KeyListener
 			}
 		}
 	}
+
+	private boolean updateFixedHideChatBorderSprites()
+	{
+		final SpritePixels windowFrameLeftSprite = client.getSpriteOverrides().get(SpriteID.BACKLEFT1);
+		final SpritePixels sidePanelLeftUpperSprite = client.getSpriteOverrides().get(SpriteID.SIDE_BACKGROUND_LEFT1);
+
+		if (fixedHideChatBorderSpritesLoaded
+			&& windowFrameLeftSprite == lastWindowFrameLeftSprite
+			&& sidePanelLeftUpperSprite == lastSidePanelLeftUpperSprite)
+		{
+			return true;
+		}
+
+		final BufferedImage windowFrameLeft = windowFrameLeftSprite != null
+			? windowFrameLeftSprite.toBufferedImage()
+			: spriteManager.getSprite(SpriteID.BACKLEFT1, 0);
+		final BufferedImage sidePanelLeftUpper = sidePanelLeftUpperSprite != null
+			? sidePanelLeftUpperSprite.toBufferedImage()
+			: spriteManager.getSprite(SpriteID.SIDE_BACKGROUND_LEFT1, 0);
+
+		if (windowFrameLeft == null
+			|| windowFrameLeft.getWidth() < FIXED_HIDE_CHAT_LEFT_BORDER_WIDTH
+			|| windowFrameLeft.getHeight() <= 0
+			|| sidePanelLeftUpper == null
+			|| sidePanelLeftUpper.getWidth() < FIXED_HIDE_CHAT_RIGHT_BORDER_WIDTH
+			|| sidePanelLeftUpper.getHeight() <= 0)
+		{
+			return false;
+		}
+
+		final int leftSourceY = Math.max(0, windowFrameLeft.getHeight() - FIXED_HIDE_CHAT_BORDER_HEIGHT);
+		final int rightSourceY = 0;
+		final BufferedImage leftBorder = flipSpriteVertically(
+			cropSprite(
+				windowFrameLeft,
+				0,
+				leftSourceY,
+				FIXED_HIDE_CHAT_LEFT_BORDER_WIDTH
+			)
+		);
+		final BufferedImage rightBorder = cropSprite(
+			sidePanelLeftUpper,
+			0,
+			rightSourceY,
+			FIXED_HIDE_CHAT_RIGHT_BORDER_WIDTH
+		);
+
+		client.getSpriteOverrides().put(
+			FIXED_HIDE_CHAT_LEFT_BORDER_SPRITE_ID,
+			ImageUtil.getImageSpritePixels(leftBorder, client)
+		);
+		client.getSpriteOverrides().put(
+			FIXED_HIDE_CHAT_RIGHT_BORDER_SPRITE_ID,
+			ImageUtil.getImageSpritePixels(rightBorder, client)
+		);
+
+		lastWindowFrameLeftSprite = windowFrameLeftSprite;
+		lastSidePanelLeftUpperSprite = sidePanelLeftUpperSprite;
+		fixedHideChatBorderSpritesLoaded = true;
+		client.getWidgetSpriteCache().reset();
+		return true;
+	}
+
+	private static BufferedImage cropSprite(final BufferedImage source, final int sourceX, final int sourceY, final int width)
+	{
+		final int sourceHeight = Math.min(FIXED_HIDE_CHAT_BORDER_HEIGHT, source.getHeight() - sourceY);
+		final BufferedImage cropped = new BufferedImage(width, FIXED_HIDE_CHAT_BORDER_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		final Graphics2D graphics = cropped.createGraphics();
+		graphics.drawImage(
+			source,
+			0,
+			0,
+			width,
+			FIXED_HIDE_CHAT_BORDER_HEIGHT,
+			sourceX,
+			sourceY,
+			sourceX + width,
+			sourceY + sourceHeight,
+			null
+		);
+		graphics.dispose();
+		return cropped;
+	}
+
+	private static BufferedImage flipSpriteVertically(final BufferedImage source)
+	{
+		final BufferedImage flipped = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		final Graphics2D graphics = flipped.createGraphics();
+		graphics.drawImage(source, 0, source.getHeight(), source.getWidth(), -source.getHeight(), null);
+		graphics.dispose();
+		return flipped;
+	}
+
+	private void resetFixedHideChatBorderSprites()
+	{
+		client.getSpriteOverrides().remove(FIXED_HIDE_CHAT_LEFT_BORDER_SPRITE_ID);
+		client.getSpriteOverrides().remove(FIXED_HIDE_CHAT_RIGHT_BORDER_SPRITE_ID);
+		fixedHideChatBorderSpritesLoaded = false;
+		lastWindowFrameLeftSprite = null;
+		lastSidePanelLeftUpperSprite = null;
+		client.getWidgetSpriteCache().reset();
+	}
+
 	@Provides
 	FixedHideChatConfig getConfig(ConfigManager configManager)
 	{
