@@ -26,12 +26,16 @@ dependencies {
 	testImplementation group: 'net.runelite', name:'jshell', version: runeLiteVersion
 }
 
-group = 'com.example'
-version = '1.0-SNAPSHOT'
+group = 'io.github.deathbeam.plugins.fixedhidechat'
+version = '1.0'
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
 	options.release.set(11)
+}
+
+tasks.withType(JavaExec).configureEach {
+	jvmArgs '-ea'
 }
 
 tasks.register('shadowJar', Jar) {
