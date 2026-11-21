@@ -9,6 +9,16 @@ import net.runelite.api.widgets.*;
 
 public class FixedHideChatConstants
 {
+	/**
+	 * Creates an entry for a widget of the chatbox interface from its packed gameval id
+	 * ({@code interface << 16 | child}). Using the gameval constants instead of hardcoded child
+	 * indices keeps the entries valid when the game adds or reorders chatbox children.
+	 */
+	private static Map.Entry<Integer, Integer> chatboxWidget(final int packedWidgetId)
+	{
+		return new AbstractMap.SimpleEntry<>(packedWidgetId >>> 16, packedWidgetId & 0xFFFF);
+	}
+
 	// 'Rub' option (S219.0) Duel rings, Slayer Rings, Burning Amulets, etc.
 	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_DIALOG_OPTION = new AbstractMap.SimpleEntry<>(
 		InterfaceID.DIALOG_OPTION,
@@ -46,27 +56,38 @@ public class FixedHideChatConstants
 		0
 	);
 
-	// A lot of other stuff, we recurse through this, it should catch any messages under (S162.566 ID: 10617398)
+	// Destroy item confirmation (S584.0) - "Are you sure you want to destroy this item?" Yes/No screen.
+	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_DIALOG_CONFIRM_DESTROY = new AbstractMap.SimpleEntry<>(
+		net.runelite.api.gameval.InterfaceID.CONFIRMDESTROY,
+		0
+	);
+
+	// A lot of other stuff, we recurse through this, it should catch any messages under (S162.567 ID: 10617399)
 	// Wrong PIN popup, NPC Dialog (N231.0 ID: 5138816), Make-X (N270.0 ID: 17694720)... etc.
-	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_SPECIAL = new AbstractMap.SimpleEntry<>(
-		InterfaceID.CHATBOX,
-		566
+	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_SPECIAL = chatboxWidget(
+		net.runelite.api.gameval.InterfaceID.Chatbox.CHATOVERLAY
 	);
 
-	//	// Bank Search Container
-	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_CONTAINER = new AbstractMap.SimpleEntry<>(
-		InterfaceID.CHATBOX,
-		42
+	// Close icon of the interface that is opened inside the chatbox (S162.42).
+	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_CONTAINER = chatboxWidget(
+		net.runelite.api.gameval.InterfaceID.Chatbox.CLOSE_ICON
 	);
 
-	private static final Map.Entry<Integer, Integer>  CHATBOX_GE_SEARCH = new AbstractMap.SimpleEntry<>(
-		InterfaceID.CHATBOX,
-		43
+	// Title of the interface that is opened inside the chatbox (S162.43),
+	// e.g. "What would you like to buy?" on the GE search box.
+	private static final Map.Entry<Integer, Integer>  CHATBOX_MESSAGES_TITLE = chatboxWidget(
+		net.runelite.api.gameval.InterfaceID.Chatbox.MES_TEXT
 	);
 
-	private static final Map.Entry<Integer, Integer>  CHATBOX_MES_LAYER_SCROLLAREA = new AbstractMap.SimpleEntry<>(
-		net.runelite.api.gameval.InterfaceID.CHATBOX,
-		48
+	// Sub text of the interface that is opened inside the chatbox (S162.44),
+	// e.g. "Start typing the name of an item to search for it".
+	private static final Map.Entry<Integer, Integer>  CHATBOX_GE_SEARCH = chatboxWidget(
+		net.runelite.api.gameval.InterfaceID.Chatbox.MES_TEXT2
+	);
+
+	// Scroll area of the interface that is opened inside the chatbox (S162.49).
+	private static final Map.Entry<Integer, Integer>  CHATBOX_MES_LAYER_SCROLLAREA = chatboxWidget(
+		net.runelite.api.gameval.InterfaceID.Chatbox.MES_LAYER_SCROLLAREA
 	);
 
 	private static final Map.Entry<Integer, Integer>  FIXED_VIEWPORT_BANK_POPUP_CONTAINER = new AbstractMap.SimpleEntry<>(
@@ -103,9 +124,11 @@ public class FixedHideChatConstants
 		.add(CHATBOX_MESSAGES_DIALOG_PLAYER)
 		.add(CHATBOX_MESSAGES_DIALOG_SPRITE)
 		.add(CHATBOX_MESSAGES_DIALOG_MESSAGEBOX)
+		.add(CHATBOX_MESSAGES_DIALOG_CONFIRM_DESTROY)
 		.add(CHATBOX_MESSAGES_MEMBERSHIP_PROMPT)
 		.add(CHATBOX_MESSAGES_SKILLMULTI)
 		.add(CHATBOX_MESSAGES_CONTAINER)
+		.add(CHATBOX_MESSAGES_TITLE)
 		.add(CHATBOX_MESSAGES_SPECIAL)
 		.add(CHATBOX_GE_SEARCH)
 		.add(CHAT_LEFT)
